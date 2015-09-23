@@ -133,7 +133,8 @@ static std::string DoState(PointerWrap& p)
 	else
 		version_created_by.clear();
 
-	if (version != STATE_VERSION)
+	//if (version != STATE_VERSION)
+	if(false)
 	{
 		if (version_created_by.empty() && s_old_versions.count(version))
 		{
@@ -654,13 +655,21 @@ void LoadLastSaved(int i, bool silent)
 void SaveFirstSaved()
 {
 	std::map<double, int> savedStates = GetSavedStates();
-
+	constexpr u32 keepLastCount = 2;
 	// save to an empty slot
 	if (savedStates.size() < NUM_STATES)
 		Save(GetEmptySlot(savedStates), true);
 	// overwrite the oldest state
 	else
 	{
+		//removing furthest slots (10, 9 ...) from map
+		for (auto slot = savedStates.begin(); slot != savedStates.end();)
+		{
+			if (slot->second > NUM_STATES - keepLastCount)
+				slot = savedStates.erase(slot);
+			else
+				++slot;
+		}
 		std::map<double, int>::iterator it = savedStates.begin();
 		std::advance(it, savedStates.size()-1);
 		Save(it->second, true);
