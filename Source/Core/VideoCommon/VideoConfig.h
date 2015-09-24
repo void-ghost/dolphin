@@ -92,7 +92,7 @@ struct VideoConfig final
 	int iStereoDepth;
 	int iStereoConvergence;
 	bool bStereoSwapEyes;
-	StereoscopyPreset oStereoPresets[STEREOSCOPY_PRESETS_NUM];
+	std::array<StereoscopyPreset, STEREOSCOPY_PRESETS_NUM> oStereoPresets;
 	int iStereoActivePreset;
 
 	// Information
