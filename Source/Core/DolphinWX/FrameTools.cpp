@@ -1130,6 +1130,8 @@ void CFrame::DoStop()
 		std::lock_guard<std::recursive_mutex> lk(keystate_lock);
 		wxMutexGuiEnter();
 #endif
+		if (true)
+			State::Save(State::NUM_STATES + 1);
 		// Ask for confirmation in case the user accidentally clicked Stop / Escape
 		if (SConfig::GetInstance().bConfirmStop)
 		{

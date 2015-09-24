@@ -250,7 +250,8 @@ static std::map<double, int> GetSavedStates()
 {
 	StateHeader header;
 	std::map<double, int> m;
-	for (int i = 1; i <= (int)NUM_STATES; i++)
+	constexpr u32 ADDITIONAL_STATES_NUM = 1;
+	for (int i = 1; i <= (int)(NUM_STATES + ADDITIONAL_STATES_NUM); i++)
 	{
 		std::string filename = MakeStateFilename(i);
 		if (File::Exists(filename))
