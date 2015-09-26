@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <lzo/lzo1x.h>
+#include <wx/scopeguard.h>
 
 #include "Common/CommonTypes.h"
 #include "Common/Event.h"
@@ -282,8 +283,17 @@ struct CompressAndDumpState_args
 static void CompressAndDumpState(CompressAndDumpState_args save_args)
 {
 	std::lock_guard<std::mutex> lk(*save_args.buffer_mutex);
-	if (!save_args.wait)
+
+	auto onExit= wxMakeGuard([]()
+	{
+		NOTICE_LOG(BOOT, "wait is over");
 		g_compressAndDumpStateSyncEvent.Set();
+	});
+	if (!save_args.wait)
+	{
+		onExit.Execute();
+		onExit.Dismiss();
+	}
 
 	const u8* const buffer_data = &(*(save_args.buffer_vector))[0];
 	const size_t buffer_size = (save_args.buffer_vector)->size();
@@ -315,7 +325,6 @@ static void CompressAndDumpState(CompressAndDumpState_args save_args)
 	if (!f)
 	{
 		Core::DisplayMessage("Could not save state", 2000);
-		g_compressAndDumpStateSyncEvent.Set();
 		return;
 	}
 
@@ -363,7 +372,6 @@ static void CompressAndDumpState(CompressAndDumpState_args save_args)
 	}
 
 	Core::DisplayMessage(StringFromFormat("Saved State to %s", filename.c_str()), 2000);
-	g_compressAndDumpStateSyncEvent.Set();
 }
 
 void SaveAs(const std::string& filename, bool wait)
