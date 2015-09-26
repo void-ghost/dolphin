@@ -184,7 +184,7 @@ wxMenuBar* CFrame::CreateMenu()
 	loadMenu->Append(IDM_UNDO_LOAD_STATE, GetMenuLabel(HK_UNDO_LOAD_STATE));
 	loadMenu->AppendSeparator();
 
-	for (unsigned int i = 0; i < State::NUM_STATES; i++)
+	for (unsigned int i = 0; i < State::QUICK_STATE_NUM; ++i)
 	{
 		loadMenu->Append(IDM_LOAD_SLOT_1 + i, GetMenuLabel(HK_LOAD_STATE_SLOT_1 + i));
 		saveMenu->Append(IDM_SAVE_SLOT_1 + i, GetMenuLabel(HK_SAVE_STATE_SLOT_1 + i));
@@ -192,7 +192,7 @@ wxMenuBar* CFrame::CreateMenu()
 	}
 
 	loadMenu->AppendSeparator();
-	for (unsigned int i = 0; i < State::NUM_STATES; i++)
+	for (unsigned int i = 0; i < State::QUICK_STATE_NUM; ++i)
 		loadMenu->Append(IDM_LOAD_LAST_1 + i, GetMenuLabel(HK_LOAD_LAST_STATE_1 + i));
 
 	menubar->Append(emulationMenu, _("&Emulation"));
@@ -1130,8 +1130,6 @@ void CFrame::DoStop()
 		std::lock_guard<std::recursive_mutex> lk(keystate_lock);
 		wxMutexGuiEnter();
 #endif
-		if (true)
-			State::Save(State::NUM_STATES + 1);
 		// Ask for confirmation in case the user accidentally clicked Stop / Escape
 		if (SConfig::GetInstance().bConfirmStop)
 		{
@@ -1166,6 +1164,9 @@ void CFrame::DoStop()
 				return;
 			}
 		}
+
+		if (SConfig::GetInstance().bContinuousPlay)
+			State::Save(State::ON_EXIT_STATE, true);
 
 		if (UseDebugger && g_pCodeWindow)
 		{

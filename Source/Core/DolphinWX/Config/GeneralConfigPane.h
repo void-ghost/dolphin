@@ -43,7 +43,7 @@ private:
 	wxCheckBox* m_idle_skip_checkbox;
 	wxCheckBox* m_cheats_checkbox;
 	wxCheckBox* m_force_ntscj_checkbox;
-	wxCheckBox* m_auto_load_checkbox;
+	wxCheckBox* m_continuous_play_checkbox;
 
 	wxChoice* m_frame_limit_choice;
 

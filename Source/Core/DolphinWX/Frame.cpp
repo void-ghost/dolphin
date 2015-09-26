@@ -1332,7 +1332,7 @@ void CFrame::ParseHotkeys()
 	if (onceOnLaunch)
 	{
 		onceOnLaunch = false;
-		if (SConfig::GetInstance().bAutoLoadSavestate)
+		if (SConfig::GetInstance().bContinuousPlay)
 			State::LoadLastSaved();
 	}
 
@@ -1515,7 +1515,7 @@ void CFrame::ParseHotkeys()
 		VertexShaderManager::ResetView();
 
 	// Savestates
-	for (u32 i = 0; i < State::NUM_STATES; i++)
+	for (u32 i = 0; i < State::QUICK_STATE_NUM; i++)
 	{
 		if (IsHotkey(HK_LOAD_STATE_SLOT_1 + i))
 			State::Load(1 + i);

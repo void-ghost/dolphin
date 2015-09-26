@@ -225,9 +225,9 @@ void VerifyBuffer(std::vector<u8>& buffer)
 }
 
 // return state number not in map
-static int GetEmptySlot(std::map<double, int> m)
+static int GetEmptyQuickSlot(std::map<double, int> m)
 {
-	for (int i = 1; i <= (int)NUM_STATES; i++)
+	for (int i = QUICK_STATE_FIRST; i <= (int)QUICK_STATE_LAST; ++i)
 	{
 		bool found = false;
 		for (auto& p : m)
@@ -251,8 +251,7 @@ static std::map<double, int> GetSavedStates()
 {
 	StateHeader header;
 	std::map<double, int> m;
-	constexpr u32 ADDITIONAL_STATES_NUM = 1;
-	for (int i = 1; i <= (int)(NUM_STATES + ADDITIONAL_STATES_NUM); i++)
+	for (int i = QUICK_STATE_FIRST; i <= (int)(ALL_STATES_LAST); ++i)
 	{
 		std::string filename = MakeStateFilename(i);
 		if (File::Exists(filename))
@@ -666,15 +665,15 @@ void SaveFirstSaved()
 	std::map<double, int> savedStates = GetSavedStates();
 	constexpr u32 keepLastCount = 2;
 	// save to an empty slot
-	if (savedStates.size() < NUM_STATES)
-		Save(GetEmptySlot(savedStates), true);
+	if (savedStates.size() < QUICK_STATE_NUM)
+		Save(GetEmptyQuickSlot(savedStates), true);
 	// overwrite the oldest state
 	else
 	{
 		//removing furthest slots (10, 9 ...) from map
 		for (auto slot = savedStates.begin(); slot != savedStates.end();)
 		{
-			if (slot->second > NUM_STATES - keepLastCount)
+			if (slot->second > QUICK_STATE_NUM - keepLastCount)
 				slot = savedStates.erase(slot);
 			else
 				++slot;

@@ -16,7 +16,14 @@ namespace State
 {
 
 // number of states
-static const u32 NUM_STATES = 10;
+constexpr u32 QUICK_STATE_FIRST = 1;
+constexpr u32 QUICK_STATE_NUM = 10;
+constexpr u32 QUICK_STATE_LAST = QUICK_STATE_FIRST + QUICK_STATE_NUM - 1;
+constexpr u32 ON_EXIT_STATE = QUICK_STATE_LAST + 1;
+constexpr u32 AUTOSAVE_STATE_FIRST = ON_EXIT_STATE + 1;
+constexpr u32 AUTOSAVE_STATE_NUM = 0; //not implemented yet, so don't even look for them
+constexpr u32 AUTOSAVE_STATE_LAST = AUTOSAVE_STATE_FIRST + AUTOSAVE_STATE_NUM - 1;
+constexpr u32 ALL_STATES_LAST = AUTOSAVE_STATE_LAST;
 
 struct StateHeader
 {
